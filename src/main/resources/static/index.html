@@ -1,38 +1,56 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
     <title>Blood Donation System</title>
 </head>
+
 <body>
 
 <h2>Register Donor</h2>
 
 <input id="name" placeholder="Name"><br><br>
-<input id="blood" placeholder="Blood Group"><br><br>
+<input id="blood" placeholder="Blood Group (A+, O-, etc)"><br><br>
 <input id="city" placeholder="City"><br><br>
 
 <button onclick="addDonor()">Submit</button>
 
 <script>
 function addDonor() {
+    const donor = {
+        name: document.getElementById("name").value,
+        bloodGroup: document.getElementById("blood").value,
+        city: document.getElementById("city").value,
+        available: true
+    };
+
     fetch("http://localhost:8080/api/donors", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
         },
-        body: JSON.stringify({
-            name: document.getElementById("name").value,
-            bloodGroup: document.getElementById("blood").value,
-            city: document.getElementById("city").value,
-            available: true
-        })
+        body: JSON.stringify(donor)
     })
-    .then(response => response.json())
-    .then(data => {
+    .then(response => {
+        if (!response.ok) {
+            throw new Error("Failed to add donor");
+        }
+        return response.json();
+    })
+    .then(() => {
         alert("Donor Added Successfully");
-        console.log(data);
+        clearForm();
     })
-    .catch(error => alert("Error"));
+    .catch(error => {
+        alert("Error adding donor");
+        console.error(error);
+    });
+}
+
+function clearForm() {
+    document.getElementById("name").value = "";
+    document.getElementById("blood").value = "";
+    document.getElementById("city").value = "";
 }
 </script>
 
