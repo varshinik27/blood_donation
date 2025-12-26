@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Blood Donation System</title>
+</head>
+<body>
+
+<h2>Register Donor</h2>
+
+<input id="name" placeholder="Name"><br><br>
+<input id="blood" placeholder="Blood Group"><br><br>
+<input id="city" placeholder="City"><br><br>
+
+<button onclick="addDonor()">Submit</button>
+
+<script>
+function addDonor() {
+    fetch("http://localhost:8080/api/donors", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            name: document.getElementById("name").value,
+            bloodGroup: document.getElementById("blood").value,
+            city: document.getElementById("city").value,
+            available: true
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        alert("Donor Added Successfully");
+        console.log(data);
+    })
+    .catch(error => alert("Error"));
+}
+</script>
+
+</body>
+</html>
